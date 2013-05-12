@@ -20,6 +20,9 @@ public slots:
 
 private:
     Ui::PropEditor *ui;
+    QTabWidget *tabs;
+
+    void loadRoom(const QString &path);
 };
 
 #endif // PROPEDITOR_H

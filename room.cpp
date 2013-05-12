@@ -8,6 +8,7 @@ Room::Room(QWidget *parent) :
     ui(new Ui::Room)
 {
     ui->setupUi(this);
+    ui->name->setText("New Room");
     displaySplash();
 }
 
@@ -19,8 +20,20 @@ Room::~Room()
 void Room::displaySplash()
 {
     ui->normalFrame->hide();
-    QPushButton *button = new QPushButton("Open...");
-    connect(button, SIGNAL(clicked()),
+    openButton = new QPushButton("Open...");
+    connect(openButton, SIGNAL(clicked()),
             this, SIGNAL(openRoom()));
-    ui->verticalLayout->addWidget(button);
+    ui->verticalLayout->addWidget(openButton);
+}
+
+void Room::setName(const QString &name)
+{
+    ui->name->setText(name);
+    openButton->hide();
+    ui->normalFrame->show();
+}
+
+void Room::addWalls(const QStringList &walls)
+{
+    ui->walls->addItems(walls);
 }
