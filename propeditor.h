@@ -15,6 +15,9 @@ public:
     explicit PropEditor(QWidget *parent = 0);
     ~PropEditor();
     
+public slots:
+    void openRoom();
+
 private:
     Ui::PropEditor *ui;
 };

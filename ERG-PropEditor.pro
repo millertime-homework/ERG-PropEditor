@@ -11,8 +11,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        propeditor.cpp
+        propeditor.cpp \
+    room.cpp
 
-HEADERS  += propeditor.h
+HEADERS  += propeditor.h \
+    room.h
 
-FORMS    += propeditor.ui
+FORMS    += propeditor.ui \
+    room.ui
