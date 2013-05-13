@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class Wall;
+
 namespace Ui {
 class PropEditor;
 }

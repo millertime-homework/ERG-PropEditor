@@ -1,6 +1,7 @@
 #include <QPushButton>
 
 #include "room.h"
+#include "wall.h"
 #include "ui_room.h"
 
 Room::Room(QWidget *parent) :
@@ -10,6 +11,9 @@ Room::Room(QWidget *parent) :
     ui->setupUi(this);
     ui->name->setText("New Room");
     displaySplash();
+
+    connect(ui->walls, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(openWall(QListWidgetItem*)));
 }
 
 Room::~Room()
@@ -33,7 +37,26 @@ void Room::setName(const QString &name)
     ui->normalFrame->show();
 }
 
-void Room::addWalls(const QStringList &walls)
+void Room::addWall(Wall* wall)
 {
-    ui->walls->addItems(walls);
+    wallList.append(wall);
+    ui->walls->addItem(wall->name());
+}
+
+void Room::openWall(QListWidgetItem *item)
+{
+    Wall *w = findWall(item->text());
+    if (w != NULL) {
+        w->exec();
+    }
+}
+
+Wall *Room::findWall(const QString &name)
+{
+    foreach (Wall *w, wallList) {
+        if (w->name() == name) {
+            return w;
+        }
+    }
+    return NULL;
 }

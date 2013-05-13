@@ -7,8 +7,11 @@
 #include <QtScript/QScriptValueIterator>
 
 #include "room.h"
+#include "wall.h"
 #include "propeditor.h"
 #include "ui_propeditor.h"
+
+#define IMAGE_PATH "/Users/russellmiller/psu/capstone/src/fa2012cs487-teambanana/src/web/img/"
 
 PropEditor::PropEditor(QWidget *parent) :
     QMainWindow(parent),
@@ -63,8 +66,12 @@ void PropEditor::loadRoom(const QString &path)
     tabs->setTabText(tabs->currentIndex(), roomName);
 
     QVariantMap wallMap = roomMap.value(roomName).toMap().value("_walls").toMap();
-    QStringList walls = wallMap.keys();
-    room->addWalls(walls);
+    QStringList wallNames = wallMap.keys();
+    foreach (QString wallName, wallNames) {
+        QString image = wallMap.value(wallName).toMap().value("image").toString();
+        Wall *wall = new Wall(wallName, IMAGE_PATH + image);
+        room->addWall(wall);
+    }
 
     f.close();
 }

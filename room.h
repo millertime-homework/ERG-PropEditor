@@ -3,7 +3,10 @@
 
 #include <QWidget>
 
+class QListWidgetItem;
 class QPushButton;
+
+class Wall;
 
 namespace Ui {
 class Room;
@@ -24,11 +27,17 @@ signals:
 
 public slots:
     void setName(const QString &name);
-    void addWalls(const QStringList &walls);
+    void addWall(Wall* wall);
+
+private slots:
+    void openWall(QListWidgetItem *item);
 
 private:
     Ui::Room *ui;
     QPushButton *openButton;
+    QList<Wall*> wallList;
+
+    Wall *findWall(const QString &name);
 };
 
 #endif // ROOMLIST_H
