@@ -13,11 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         propeditor.cpp \
     room.cpp \
-    wall.cpp
+    wall.cpp \
+    prop.cpp
 
 HEADERS  += propeditor.h \
     room.h \
-    wall.h
+    wall.h \
+    prop.h
 
 FORMS    += propeditor.ui \
     room.ui \

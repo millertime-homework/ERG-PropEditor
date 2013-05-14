@@ -3,6 +3,10 @@
 
 #include <QDialog>
 
+class QGraphicsScene;
+
+class Prop;
+
 namespace Ui {
 class Wall;
 }
@@ -16,10 +20,15 @@ public:
     ~Wall();
     
     QString name() { return wallName; }
+    void addProp(Prop *prop);
     void edit();
+
+protected:
+    void showEvent(QShowEvent *);
 
 private:
     Ui::Wall *ui;
+    QGraphicsScene *scene;
     QString wallName;
 };
 
