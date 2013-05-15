@@ -18,7 +18,9 @@ public:
     ~PropEditor();
     
 public slots:
+    void newRoom();
     void openRoom();
+    void saveRoom();
 
 private:
     Ui::PropEditor *ui;

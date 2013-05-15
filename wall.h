@@ -2,6 +2,7 @@
 #define WALL_H
 
 #include <QDialog>
+#include <QVariantMap>
 
 class QGraphicsScene;
 
@@ -22,14 +23,20 @@ public:
     QString name() { return wallName; }
     void addProp(Prop *prop);
     void edit();
+    QVariantMap map() const { return wallMap; }
+    void setMap(const QVariantMap &m) { wallMap = m; }
 
-protected:
-    void showEvent(QShowEvent *);
+signals:
+    void updateWall(const QString &n, const QVariantMap &propMap);
+
+private slots:
+    void updateProps();
 
 private:
     Ui::Wall *ui;
     QGraphicsScene *scene;
     QString wallName;
+    QVariantMap wallMap;
 };
 
 #endif // WALL_H

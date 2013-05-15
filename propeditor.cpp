@@ -26,13 +26,14 @@ PropEditor::PropEditor(QWidget *parent) :
     tabs = new QTabWidget();
     ui->centralWidget->layout()->addWidget(tabs);
 
-    Room *room = new Room();
-    connect(room, SIGNAL(openRoom()),
-            this, SLOT(openRoom()));
-    tabs->addTab(room, "New Room");
+    newRoom();
 
+    connect(ui->actionNew, SIGNAL(triggered()),
+            this, SLOT(newRoom()));
     connect(ui->actionOpen, SIGNAL(triggered()),
             this, SLOT(openRoom()));
+    connect(ui->actionSave, SIGNAL(triggered()),
+            this, SLOT(saveRoom()));
 }
 
 PropEditor::~PropEditor()
@@ -40,11 +41,36 @@ PropEditor::~PropEditor()
     delete ui;
 }
 
+void PropEditor::newRoom()
+{
+    Room *room = new Room();
+    connect(room, SIGNAL(openRoom()),
+            this, SLOT(openRoom()));
+    tabs->addTab(room, "New Room");
+}
+
 void PropEditor::openRoom()
 {
     QString path = QFileDialog::getOpenFileName(this, "Open a JSON Room File", "",
                                                 "Room Files (*.js)");
     loadRoom(path);
+    ui->actionSave->setEnabled(true);
+}
+
+void PropEditor::saveRoom()
+{
+    QString path = QFileDialog::getSaveFileName(this, "Save JSON Room", "",
+                                                "Room Files (*.js)");
+    QFile f(path);
+    if (!f.open(QFile::WriteOnly)) {
+        QMessageBox::critical(this, "Error", "Error saving file "+path);
+        return;
+    }
+
+    Room *room = (Room*) tabs->currentWidget();
+    QByteArray fileData = room->toJson().toAscii();
+    f.write(fileData);
+    f.close();
 }
 
 void PropEditor::loadRoom(const QString &path)
@@ -63,6 +89,7 @@ void PropEditor::loadRoom(const QString &path)
     QVariantMap roomMap = sc.toVariant().toMap();
     QString roomName = roomMap.keys().at(0);
     Room *room = (Room*) tabs->currentWidget();
+    room->setMap(roomMap);
     room->setName(roomName);
     tabs->setTabText(tabs->currentIndex(), roomName);
 
@@ -74,6 +101,7 @@ void PropEditor::loadRoom(const QString &path)
         Wall *wall = new Wall(wallName, IMAGE_PATH + image);
 
         QVariantMap propMap = wallProperties.value("_props").toMap();
+        wall->setMap(propMap);
         foreach (QString propId, propMap.keys()) {
             QVariantMap propProperties = propMap.value(propId).toMap();
             QString propName = propProperties.value("name").toString();

@@ -18,6 +18,9 @@ Wall::Wall(const QString &name, const QString &image, QWidget *parent) :
     scene->addItem(backgroundImage);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setMaximumSize(1119,615);
+
+    connect(this, SIGNAL(accepted()),
+            this, SLOT(updateProps()));
 }
 
 Wall::~Wall()
@@ -30,12 +33,20 @@ void Wall::addProp(Prop *prop)
     scene->addItem(prop);
 }
 
-void Wall::showEvent(QShowEvent *)
+void Wall::updateProps()
 {
     foreach (QGraphicsItem *i, scene->items()) {
-        QGraphicsWidget *w = dynamic_cast<QGraphicsWidget*>(i);
-        if (!w) continue;
-        QString v = i->isVisible() ? "visible" : "hidden";
-        qDebug() << w->objectName() << v;
+        Prop *p = dynamic_cast<Prop*>(i);
+        if (p) {
+            QRectF r = i->boundingRect();
+            QPointF t = i->mapToScene(r.topLeft());
+            QVariantMap propMap = wallMap.value(p->name()).toMap();
+            propMap["left"]   = qRound(t.x());
+            propMap["top"]    = qRound(t.y());
+            propMap["width"]  = qRound(r.width());
+            propMap["height"] = qRound(r.height());
+            wallMap[p->name()] = propMap;
+        }
     }
+    emit updateWall(wallName, wallMap);
 }
