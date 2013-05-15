@@ -14,12 +14,14 @@ protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *);
 
 private:
     QString propName;
     QPixmap pixmap;
-    qreal width;
-    qreal height;
+    bool resizing;
+
+    bool inCorner(const QPointF &scenePos);
 };
 
 #endif // PROP_H
