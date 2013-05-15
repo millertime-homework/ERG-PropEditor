@@ -104,9 +104,8 @@ void PropEditor::loadRoom(const QString &path)
         wall->setMap(propMap);
         foreach (QString propId, propMap.keys()) {
             QVariantMap propProperties = propMap.value(propId).toMap();
-            QString propName = propProperties.value("name").toString();
             QString propImage = propProperties.value("image").toString();
-            Prop *prop = new Prop(propName, IMAGE_PATH + propImage);
+            Prop *prop = new Prop(propId, IMAGE_PATH + propImage);
             qreal propX = propProperties.value("left").toReal();
             qreal propY = propProperties.value("top").toReal();
             prop->setPos(propX, propY);
