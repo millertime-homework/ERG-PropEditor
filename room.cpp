@@ -92,6 +92,8 @@ QString Room::toJson()
     result += ONE_TAB + "'id': '" + room.value("id").toString() + "',\n";
     result += ONE_TAB + "'x': " + room.value("x").toString() + ",\n";
     result += ONE_TAB + "'y': " + room.value("y").toString() + ",\n";
+    if (room.contains("annotation"))
+        result += ONE_TAB + "'annotation': '" + room.value("annotation").toString() + "',\n";
     if (room.contains("_triggers")) {
         QVariantList triggers = room.value("_triggers").toList();
         result += ONE_TAB + "'_triggers': [";
@@ -114,13 +116,20 @@ QString Room::toJson()
             QVariantMap destination = wall.value("destination").toMap();
             if (destination.contains("x")) {
                 result += FOUR_TABS + "'x': " + destination.value("x").toString();
-                if (destination.contains("y"))
+                if (destination.contains("y") || destination.contains("z"))
                     result += ",\n";
                 else
                     result += "\n";
             }
-            if (destination.contains("y"))
-                result += FOUR_TABS + "'y': " + destination.value("y").toString() + "\n";
+            if (destination.contains("y")) {
+                result += FOUR_TABS + "'y': " + destination.value("y").toString();
+                if (destination.contains("z"))
+                    result += ",\n";
+                else
+                    result += "\n";
+            }
+            if (destination.contains("z"))
+                result += FOUR_TABS + "'z': " + destination.value("z").toString() + "\n";
             result += THREE_TABS + "}"; // end destination object
         }
         if (wall.contains("_triggers")) {
@@ -150,7 +159,7 @@ QString Room::toJson()
                 result += FIVE_TABS + "'top': " + prop.value("top").toString() + ",\n";
                 result += FIVE_TABS + "'left': " + prop.value("left").toString();
                 if (prop.contains("barrier"))
-                    result += ",\n" + FIVE_TABS + "'barrier': '" + prop.value("barrier").toString() + "'";
+                    result += ",\n" + FIVE_TABS + "'barrier': " + prop.value("barrier").toString();
                 if (prop.contains("action"))
                     result += ",\n" + FIVE_TABS + "'action': '" + prop.value("action").toString() + "'";
                 if (prop.contains("actionVariables")) {
@@ -159,9 +168,11 @@ QString Room::toJson()
                     if (actionVariables.contains("conversationName"))
                         result += SIX_TABS + "'conversationName': '" + actionVariables.value("conversationName").toString() + "'";
                     if (actionVariables.contains("isAnAction"))
-                        result += ",\n" + SIX_TABS + "'isAnAction': '" + actionVariables.value("isAnAction").toString() + "'";
+                        result += ",\n" + SIX_TABS + "'isAnAction': " + actionVariables.value("isAnAction").toString();
                     result += "\n" + FIVE_TABS + "}\n"; // end actionVariables object
                 }
+                if (!result.endsWith("\n"))
+                    result += "\n";
                 result += FOUR_TABS + "}"; // end prop object
                 if (propKey != propKeys.last())
                     result += ",";
