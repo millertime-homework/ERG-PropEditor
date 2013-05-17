@@ -34,6 +34,8 @@ PropEditor::PropEditor(QWidget *parent) :
             this, SLOT(openRoom()));
     connect(ui->actionSave, SIGNAL(triggered()),
             this, SLOT(saveRoom()));
+    connect(ui->actionClose, SIGNAL(triggered()),
+            this, SLOT(closeRoom()));
 }
 
 PropEditor::~PropEditor()
@@ -46,7 +48,8 @@ void PropEditor::newRoom()
     Room *room = new Room();
     connect(room, SIGNAL(openRoom()),
             this, SLOT(openRoom()));
-    tabs->addTab(room, "New Room");
+    int i = tabs->addTab(room, "New Room");
+    tabs->setCurrentIndex(i);
 }
 
 void PropEditor::openRoom()
@@ -57,6 +60,7 @@ void PropEditor::openRoom()
         return;
     loadRoom(path);
     ui->actionSave->setEnabled(true);
+    ui->actionClose->setEnabled(true);
 }
 
 void PropEditor::saveRoom()
@@ -75,6 +79,11 @@ void PropEditor::saveRoom()
     QByteArray fileData = room->toJson().toAscii();
     f.write(fileData);
     f.close();
+}
+
+void PropEditor::closeRoom()
+{
+    tabs->removeTab(tabs->currentIndex());
 }
 
 void PropEditor::loadRoom(const QString &path)
