@@ -53,6 +53,8 @@ void PropEditor::openRoom()
 {
     QString path = QFileDialog::getOpenFileName(this, "Open a JSON Room File", "",
                                                 "Room Files (*.js)");
+    if (path.isEmpty())
+        return;
     loadRoom(path);
     ui->actionSave->setEnabled(true);
 }
@@ -61,6 +63,8 @@ void PropEditor::saveRoom()
 {
     QString path = QFileDialog::getSaveFileName(this, "Save JSON Room", "",
                                                 "Room Files (*.js)");
+    if (path.isEmpty())
+        return;
     QFile f(path);
     if (!f.open(QFile::WriteOnly)) {
         QMessageBox::critical(this, "Error", "Error saving file "+path);

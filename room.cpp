@@ -141,6 +141,10 @@ QString Room::toJson()
             }
             result += "]";
         }
+        if (wall.contains("fakeDirection"))
+            result += ",\n" + THREE_TABS + "'fakeDirection': '" + wall.value("fakeDirection").toString() + "'";
+        if (wall.contains("isCutscene"))
+            result += ",\n" + THREE_TABS + "'isCutscene': " + wall.value("isCutscene").toString();
         if (wall.contains("_props")) {
             result += ",\n" + THREE_TABS + "'_props': {\n";
             QVariantMap propMap = wall.value("_props").toMap();
