@@ -113,7 +113,6 @@ void PropEditor::loadRoom(const QString &path)
         QVariantMap wallProperties = wallMap.value(wallName).toMap();
         QString image = wallProperties.value("image").toString();
         QString pathToThisImage = pathToImages.filePath(image);
-        QMessageBox::information(this, "Info", "The path to this background image is" + pathToThisImage);
         Wall *wall = new Wall(wallName, pathToThisImage);
 
         QVariantMap propMap = wallProperties.value("_props").toMap();
