@@ -105,13 +105,15 @@ void PropEditor::loadRoom(const QString &path)
     room->setName(roomName);
     tabs->setTabText(tabs->currentIndex(), roomName);
 
+    QDir pathToImages(imagePath);
+
     QVariantMap wallMap = roomMap.value(roomName).toMap().value("_walls").toMap();
     QStringList wallNames = wallMap.keys();
     foreach (QString wallName, wallNames) {
         QVariantMap wallProperties = wallMap.value(wallName).toMap();
         QString image = wallProperties.value("image").toString();
-        QDir pathToImages(imagePath);
         QString pathToThisImage = pathToImages.filePath(image);
+        QMessageBox::information(this, "Info", "The path to this background image is" + pathToThisImage);
         Wall *wall = new Wall(wallName, pathToThisImage);
 
         QVariantMap propMap = wallProperties.value("_props").toMap();
@@ -119,7 +121,6 @@ void PropEditor::loadRoom(const QString &path)
         foreach (QString propId, propMap.keys()) {
             QVariantMap propProperties = propMap.value(propId).toMap();
             QString propImage = propProperties.value("image").toString();
-            QDir pathToImages(imagePath);
             QString pathToThisPropImage = pathToImages.filePath(propImage);
             Prop *prop = new Prop(propId, pathToThisPropImage);
             qreal propX = propProperties.value("left").toReal();
