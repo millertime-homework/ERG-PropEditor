@@ -12,8 +12,6 @@
 #include "propeditor.h"
 #include "ui_propeditor.h"
 
-#define IMAGE_PATH "/Users/russellmiller/psu/capstone/src/fa2012cs487-teambanana/src/web/img/"
-
 PropEditor::PropEditor(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::PropEditor)
@@ -27,6 +25,7 @@ PropEditor::PropEditor(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabs);
 
     newRoom();
+    getImagePath();
 
     connect(ui->actionNew, SIGNAL(triggered()),
             this, SLOT(newRoom()));
@@ -111,14 +110,14 @@ void PropEditor::loadRoom(const QString &path)
     foreach (QString wallName, wallNames) {
         QVariantMap wallProperties = wallMap.value(wallName).toMap();
         QString image = wallProperties.value("image").toString();
-        Wall *wall = new Wall(wallName, IMAGE_PATH + image);
+        Wall *wall = new Wall(wallName, imagePath + image);
 
         QVariantMap propMap = wallProperties.value("_props").toMap();
         wall->setMap(propMap);
         foreach (QString propId, propMap.keys()) {
             QVariantMap propProperties = propMap.value(propId).toMap();
             QString propImage = propProperties.value("image").toString();
-            Prop *prop = new Prop(propId, IMAGE_PATH + propImage);
+            Prop *prop = new Prop(propId, imagePath + propImage);
             qreal propX = propProperties.value("left").toReal();
             qreal propY = propProperties.value("top").toReal();
             prop->setPos(propX, propY);
@@ -132,4 +131,11 @@ void PropEditor::loadRoom(const QString &path)
     }
 
     f.close();
+}
+
+void PropEditor::getImagePath()
+{
+    imagePath = QFileDialog::getExistingDirectory(this, "Open the image directory");
+    if (imagePath.isEmpty())
+        QMessageBox::critical(this, "Error", "Error: unable to read the image path. Assuming current directory");
 }

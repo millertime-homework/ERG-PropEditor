@@ -26,8 +26,10 @@ public slots:
 private:
     Ui::PropEditor *ui;
     QTabWidget *tabs;
+    QString imagePath;
 
     void loadRoom(const QString &path);
+    void getImagePath();
 };
 
 #endif // PROPEDITOR_H
